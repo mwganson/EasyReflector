@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-__version__ = "0.2023.09.04b"
-#__version__ = "0.2023.09.04b"
+__version__ = "0.2023.09.04c"
+#__version__ = "0.2023.09.04c"
 ##EasyReflector macro by TheMarkster
 ##based on work by Athanaze at https://github.com/Athanaze/Freecad-easy-reflections
 ##
@@ -17,7 +17,7 @@ __version__ = "0.2023.09.04b"
 #EXPANDED_FILES = DEFAULT_FILES #will add any additional files user has added to Environment property
 #
 ## Get a list of all .jpg files in the local directory
-#local_files = [f for f in os.listdir(PATH) if f.endswith(".jpg")]
+#local_files = [f for f in os.listdir(PATH) if f.endswith(".jpg")] if os.path.exists(PATH) else DEFAULT_FILES
 #
 ## Iterate through local files and add their base names to EXPANDED_FILES if not already present
 #for local_file in local_files:
