@@ -1,3 +1,9 @@
+#EasyReflector macro by TheMarkster
+#based on work by Athanaze at https://github.com/Athanaze/Freecad-easy-reflections
+#version 0.2023.09.03
+#
+#do not run this file directly.  Instead run the EasyReflector.FCMacro file.
+
 from pivy import coin
 import FreeCAD
 
