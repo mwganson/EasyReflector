@@ -17,11 +17,26 @@ Put the EasyReflector.FCMacro file into your macros folder.  It will create the 
 
 Select the object you wish to apply the texture to, and then run the EasyReflector.FCMacro macro.  (Do not run the EasyReflector.py file as it is imported by the .FCMacro file and by FreeCAD when you load a document containing one of the EasyReflector objects.)
 
-The studio texture is applied to the selected object(s) by default, but you can change that by editing the Environment property of the EasyReflector object.
-
-Note: FreeCAD does not save the texture information, so when you reload the file you need to refresh the EasyReflector object by toggling the Refresh property from False to True.  This triggers a refresh, reapplying your texture to your objects.  The Refresh property then toggles itself back to False, ready for the next usage.
+The studio texture is applied to the selected object(s) by default, but you can change that by editing the Environment property of the EasyReflector object.  You can also drag and drop objects onto the EasyReflector icon in the combo view to add this to the LinkedObjects property.
 
 You can also use your own image file for the texture instead of the files provided here.  To do this, choose the "image file" option for the Environment.  This makes visible the "Image File" property, which you can use to select your image file to apply.  The file can reside in any directory.
+
+You can also put your own JPG files into the easy_reflections folder and when you create a new EasyReflector object those files will appear in the Environment property as an option.  (Only works for files with JPG extension.  For other extension, select "image file" and then point the ImageFile property to that file.)
+
+If you delete the EasyReflector objects, it will remove texturing from all of the LinkedObjects.
+
+## Properties
+Each EasyReflector object has properties with which it can be modified.
+### Enabled (boolean)
+Default:True.  Set to False if you want to temporarily remove texturing.  (Double-clicking on the icon in the tree will toggle this property, too.)
+### Environment (Enumeration)
+Default: studio.  Change this to "image file" if you want to provide your own custom image.  Change it to "none" if you don't want texturing.  (The none option actually uses white.jpg as the texture.)  If you add more JPG files to your easy_reflections folder (a subfolder of the macros folder) these options will be added to the Environment property the next time you create a new EasyReflector object.
+### LinkedObjects (Property Link List)
+These are the objects to which the textures will be applied.  You can populate this list in a number of ways: 1) by first selecting the objects to texture before creating the EasyReflector object; 2) by manually editing the LinkedObjects property; 3) by dragging/dropping objects on to the EasyReflector icon in the combo view.
+
+Note: Removing a textured object from the LinkedObjects list does not automatically remove its current texture, if any.  To remove the textures you can edit the Enabled property to false or delete the EasyReflector object or by removing the object from the list, saving the file, and reloading it.
+### Version (string)
+version of the macro used to create this EasyReflector object
 
 ## ChangeLog
 ### 0.2023.09.04b -- added view provider and icons
