@@ -3,6 +3,9 @@ Easily manage textures in FreeCAD
 
 <img src="screenshot01.png">
 
+## Toolbar Icon
+<img src="EasyReflectorIcon.svg">
+
 ## Credits
 Based on this repo: https://github.com/Athanaze/Freecad-easy-reflections
 I just made it into a feature python object that would be persistent between FreeCAD sessions and added the capability to specify custom texture files.
