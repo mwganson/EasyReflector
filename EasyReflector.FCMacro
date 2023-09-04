@@ -1,11 +1,258 @@
-import importlib
-import EasyReflector
-importlib.reload(EasyReflector)
+# -*- coding: utf-8 -*-
+__version__ = "0.2023.09.04"
+#__version__ = "0.2023.09.04"
+##EasyReflector macro by TheMarkster
+##based on work by Athanaze at https://github.com/Athanaze/Freecad-easy-reflections
+##
+##do not run this file directly.  Instead run the EasyReflector.FCMacro file.
+##
+#from pivy import coin
+#import FreeCAD
+#import os, requests
+#from PySide import QtGui
+#
+#PATH = FreeCAD.ParamGet("User parameter:BaseApp/Preferences/Macro").GetString("MacroPath")+"/easy_reflections/"
+#DEFAULT_FILES = ["image file","none","interior","industrial","mesh2","outside","studio","workshop"]
+#GITHUB_BASE_URL = "https://github.com/mwganson/EasyReflector/raw/main/easy_reflections/"
+#EXPANDED_FILES = DEFAULT_FILES #will add any additional files user has added to Environment property
+#
+## Get a list of all .jpg files in the local directory
+#local_files = [f for f in os.listdir(PATH) if f.endswith(".jpg")]
+#
+## Iterate through local files and add their base names to EXPANDED_FILES if not already present
+#for local_file in local_files:
+#    base_name = os.path.splitext(local_file)[0]  # Get the base name without the .jpg extension
+#    if base_name not in EXPANDED_FILES and base_name != "white":
+#        EXPANDED_FILES.append(base_name)
+#
+#class EasyReflector:
+#    def __init__(self, obj):
+#        obj.addProperty("App::PropertyString","Version","EasyReflector","Version used to create this object").Version = __version__
+#        obj.addProperty("App::PropertyEnumeration", "Environment","EasyReflector","Select Environment (white = None)")
+#        obj.Environment = EXPANDED_FILES
+#        obj.Environment = "studio"
+#        obj.addProperty("App::PropertyLinkList","LinkedObjects","EasyReflector","Objects to apply textures to")
+#        obj.addProperty("App::PropertyFile","ImageFile","EasyReflector","Image file to use for environment")
+#        obj.setEditorMode("ImageFile", 2) #hide by default
+#        obj.Proxy = self
+#
+#    def execute(self,fp):
+#        if not fp.LinkedObjects:
+#            return
+#        self.setEnvironment(fp, fp.Environment)
+#
+#    def onChanged(self,fp,prop):
+#        if not fp:
+#            return
+#        elif prop == "Environment":
+#            if fp.Environment == "image file":
+#                fp.setEditorMode("ImageFile", 0) #normal mode
+#            else:
+#                fp.setEditorMode("ImageFile", 2) #hide
+#
+#    def onDocumentRestored(self, fp):
+#        self.setEnvironment(fp, fp.Environment)
+#
+#    def checkImagesExist(self, fp):
+#        paths = [PATH + (fn + ".jpg"  if fn != "none" else "white.jpg") for fn in DEFAULT_FILES[1:]]
+#        for path in paths:
+#            if not os.path.exists(path):
+#                return False
+#        return True
+#
+#    def getPermissionFromUser(self,fp):
+#        msgBox = QtGui.QMessageBox()
+#        msgBox.setWindowTitle("EasyReflector")
+#        msgBox.setIcon(QtGui.QMessageBox.Warning)
+#        msgBox.setText("EasyReflector needs to download the texture image files.")
+#        info = "These are jpg image files to be used as textures for the reflections. "
+#        info += "They will be downloaded from a github repository and placed in "
+#        info += "your macros folder in a subfolder named easy_reflections. "
+#        info += "You must manually remove these files if you uninstall EasyReflector. "
+#        info += "Proceed with download (Yes/No)?"
+#        msgBox.setInformativeText(info) 
+#        msgBox.setStandardButtons(QtGui.QMessageBox.Yes | QtGui.QMessageBox.No)
+#        msgBox.setDefaultButton(QtGui.QMessageBox.No)
+#        ret = msgBox.exec();
+#        return ret == QtGui.QMessageBox.Yes
+#
+#    def downloadImages(self, fp):
+#        if not self.getPermissionFromUser(fp):
+#            return
+#        FreeCAD.Console.PrintMessage("Downloading files...\n")
+#        os.makedirs(PATH, exist_ok=True)
+#        for fn in DEFAULT_FILES[1:]:
+#            if fn == "none":
+#                # For "none", download the white.jpg file
+#                url = GITHUB_BASE_URL + "white.jpg"
+#            else:
+#                # For other files, download them using their respective names
+#                url = GITHUB_BASE_URL + fn + ".jpg"
+#
+#            # Get the content from the GitHub URL
+#            response = requests.get(url)
+#   
+#            # Check if the request was successful
+#            if response.status_code == 200:
+#                # Construct the local file path
+#                local_file_path = os.path.join(PATH, fn + ".jpg" if fn != "none" else "white.jpg")
+#        
+#                # Save the content to the local file
+#                with open(local_file_path, "wb") as file:
+#                    file.write(response.content)
+#            
+#                print(f"Downloaded '{fn}.jpg' from GitHub and saved it as '{local_file_path}'")
+#            else:
+#                print(f"Failed to download '{fn}.jpg' from GitHub. Status code: {response.status_code}")
+#
+#        
+#    def setEnvironment(self, fp, env):
+#        if not self.checkImagesExist(fp):
+#            self.downloadImages(fp)
+#        tex = coin.SoTexture2()
+#        if env == "image file":
+#            tex.filename = fp.ImageFile
+#        else:
+#            if fp.Environment == "none":
+#                tex.filename = PATH + "white.jpg"
+#            else:
+#                tex.filename = PATH + fp.Environment + ".jpg"
+#        tc = coin.SoTextureCoordinateEnvironment()
+#        linked = fp.LinkedObjects
+#        if not linked:
+#            return
+#        for link in linked:
+#            rootnode = link.ViewObject.RootNode
+#            child1 = rootnode.getChild(1)
+#            child2 = rootnode.getChild(2)
+#            already_done = "SoTexture2" in str(type(child1)) and "SoTextureCoordinateEnvironment" in str(type(child2))
+#            if already_done:
+#                rootnode.replaceChild(1, tex)
+#                rootnode.replaceChild(2, tc)
+#            else:
+#                rootnode.insertChild(tex,1) 
+#                rootnode.insertChild(tc,2)
+#
+#CODE_ENDS_HERE
+########################################
 
-sel = Gui.Selection.getSelection()
+BASENAME = 'easyreflector'
 
-ER = FreeCAD.ActiveDocument.addObject("App::FeaturePython","EasyReflector")
-EasyReflector.EasyReflector(ER)
+def makeObject(FP):
 
-if len(sel) == 1:
-    ER.LinkedObjects = sel
+    doc = FreeCAD.ActiveDocument
+    sel = Gui.Selection.getSelection()
+
+    fp = doc.addObject("App::FeaturePython","EasyReflector")
+    FP.EasyReflector(fp)
+
+    if len(sel) >= 1:
+        fp.LinkedObjects = sel
+
+
+#################
+def writeFile():
+    with open(py_file,"w") as outfile:
+        for line in code.splitlines():
+            if "#CODE_ENDS_HERE" in line:
+                break
+            if line.startswith('#'):
+                if line == "# -*- coding: utf-8 -*-":
+                    line = "#" + line
+                outfile.write(line[1:]+"\n") #skip first character (#)
+
+
+
+############
+#if __name__ == "__main__":
+#    makeObject(None)
+#    raise Exception("quick exit for testing/debugging")
+############
+
+if __name__ == "__main__":
+    import os
+    fin = open(__file__, 'r')
+    code = fin.read()
+    fin.close()
+    version = code.splitlines()[1][16:]
+    real_path = os.path.realpath(__file__)
+    dir_path = os.path.dirname(real_path)
+    py_file = real_path.replace(".FCMacro",".py").replace('EasyReflector','easyreflector').replace("easyReflector","easyreflector")
+    bHasFile = os.path.exists(py_file)
+    noImport = False #user elects not to save import file
+
+    if not bHasFile:
+        from PySide import QtGui
+        window = QtGui.QApplication.activeWindow()
+        mb = QtGui.QMessageBox()
+        mb.setWindowTitle(BASENAME+" setup")
+        mb.setIcon(mb.Information)
+        mb.setStandardButtons(mb.Ok | mb.Cancel)
+        mb.setDefaultButton(mb.Cancel)
+        okBtn = mb.button(QtGui.QMessageBox.StandardButton.Ok)
+        cancelBtn = mb.button(QtGui.QMessageBox.StandardButton.Cancel)
+        okBtn.setText("Create file")
+        cancelBtn.setText("Do not create file")
+        caption = "In order for "+BASENAME+" objects to be parametric after saving and reloading file\n\
+we need to create another file on this computer.  File to be created will be: \n\n"+py_file+"\n\n\
+This makes it available to the system upon restarting FreeCAD and loading documents containing the \
+"+BASENAME+" feature python objects.  Create file now?\n\n"
+        mb.setText(caption)
+        ret = mb.exec_()
+        if ret == mb.Ok:
+            writeFile()
+            QtGui.QMessageBox.information(window,"Success","File successfully created.  Please note: if you uninstall "+BASENAME+" macro you need to manually remove "+py_file+", too.\n")
+        else:
+            new_lines = []
+            for line in code.splitlines():
+                if line.startswith('#'):
+                    if "CODE_ENDS_HERE" in line:
+                        break
+                    if line == "# -*- coding: utf-8 -*-":
+                        new_lines.append(line+"\n")
+                        continue
+                    new_lines.append(line[1:]+"\n")
+            code = "".join(new_lines)
+
+            #credit to Mila Nautikus for his answer to a question on stackoverflow, which I modified here
+            #in this example the filename is easyreflector.py
+            #https://stackoverflow.com/questions/5362771/how-to-load-a-module-from-code-in-a-string
+
+            ##########
+            import sys, importlib
+            my_name = BASENAME
+            my_spec = importlib.util.spec_from_loader(my_name, loader=None)
+
+            my_macro = importlib.util.module_from_spec(my_spec)
+
+            exec(code,my_macro.__dict__)
+            sys.modules[BASENAME] = my_macro
+            makeObject(my_macro)
+            noImport = True
+
+    if not noImport: #don't never use no double negatives
+        import addonmanager_utilities as utils
+        import easyreflector as FP
+        if FP.__version__ != __version__:
+            writeFile()
+            from PySide import QtCore,QtGui
+            window = QtGui.QApplication.activeWindow()
+            mbox = QtGui.QMessageBox()
+            mbox.setWindowTitle(BASENAME+" updated")
+
+            mbox.setText(BASENAME+".py has been updated to version "+__version__+". \
+You must restart FreeCAD for the new changes to take effect and to use the macro.")
+            mbox.setIcon(mbox.Warning)
+            mbox.setStandardButtons(mbox.Ok | mbox.Cancel)
+            mbox.setDefaultButton(mbox.Cancel)
+            okBtn = mbox.button(QtGui.QMessageBox.StandardButton.Ok)
+            cancelBtn = mbox.button(QtGui.QMessageBox.StandardButton.Cancel)
+            okBtn.setText("Restart now")
+            cancelBtn.setText("Restart later")
+            ret = mbox.exec_()
+            if ret == mbox.Ok:
+                QtCore.QTimer.singleShot(1000, utils.restart_freecad)
+        else:
+            makeObject(FP)
+
+
