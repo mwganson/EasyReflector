@@ -21,6 +21,11 @@ Note: FreeCAD does not save the texture information, so when you reload the file
 You can also use your own image file for the texture instead of the files provided here.  To do this, choose the "image file" option for the Environment.  This makes visible the "Image File" property, which you can use to select your image file to apply.  The file can reside in any directory.
 
 ## ChangeLog
+### 0.2023.09.04b -- added view provider and icons
+Now can accept drag and drop
+Untextures its LinkedObjects upon deletion
+Dynamic icon change upon enabling/disabling
+Enable/Disable via double click
 ### 0.2023.09.04 -- now creates .py file automatically, and also downloads images and puts them in macros/easy_reflections folder
 adds ability to put new .jpg files into the easy_reflections folder, the Environment property automatically updates for new EasyReflector objects
 ### 0.2023.09.03 -- initial uploaded version
