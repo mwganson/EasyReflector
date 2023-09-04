@@ -30,7 +30,7 @@ Note: FreeCAD does not save the texture information, so when you reload the file
 
 You can also use your own image file for the texture instead of the files provided here.  To do this, choose the "image file" option for the Environment.  This makes visible the "Image File" property, which you can use to select your image file to apply.  The file can reside in any directory.
 
-##ChangeLog
+## ChangeLog
 
 0.2023.09.03 -- initial uploaded version
 
