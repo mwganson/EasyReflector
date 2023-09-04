@@ -1,0 +1,11 @@
+import importlib
+import EasyReflector
+importlib.reload(EasyReflector)
+
+sel = Gui.Selection.getSelection()
+
+ER = FreeCAD.ActiveDocument.addObject("App::FeaturePython","EasyReflector")
+EasyReflector.EasyReflector(ER)
+
+if len(sel) == 1:
+    ER.LinkedObjects = sel
