@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
-__version__ = "0.2023.09.04"
-#__version__ = "0.2023.09.04"
+__version__ = "0.2023.09.04b"
+#__version__ = "0.2023.09.04b"
 ##EasyReflector macro by TheMarkster
 ##based on work by Athanaze at https://github.com/Athanaze/Freecad-easy-reflections
 ##
 ##do not run this file directly.  Instead run the EasyReflector.FCMacro file.
 ##
 #from pivy import coin
-#import FreeCAD
+#import FreeCAD, FreeCADGui
 #import os, requests
 #from PySide import QtGui
 #
@@ -34,6 +34,7 @@ __version__ = "0.2023.09.04"
 #        obj.addProperty("App::PropertyLinkList","LinkedObjects","EasyReflector","Objects to apply textures to")
 #        obj.addProperty("App::PropertyFile","ImageFile","EasyReflector","Image file to use for environment")
 #        obj.setEditorMode("ImageFile", 2) #hide by default
+#        obj.addProperty("App::PropertyBool","Enabled","EasyReflector","Whether texturing is enabled or not").Enabled=True
 #        obj.Proxy = self
 #
 #    def execute(self,fp):
@@ -117,6 +118,8 @@ __version__ = "0.2023.09.04"
 #                tex.filename = PATH + "white.jpg"
 #            else:
 #                tex.filename = PATH + fp.Environment + ".jpg"
+#        if not fp.Enabled:
+#            tex.filename = PATH + "white.jpg"
 #        tc = coin.SoTextureCoordinateEnvironment()
 #        linked = fp.LinkedObjects
 #        if not linked:
@@ -133,6 +136,269 @@ __version__ = "0.2023.09.04"
 #                rootnode.insertChild(tex,1) 
 #                rootnode.insertChild(tc,2)
 #
+#
+#class EasyReflectorVP:
+#    def __init__(self, obj):
+#        '''Set this object to the proxy object of the actual view provider'''
+#        obj.Proxy = self
+#
+#    def doubleClicked(self,vobj):
+#        vobj.Object.Enabled = not vobj.Object.Enabled
+#
+#    def dropObject(self, vp, dropped):
+#        vp.Object.LinkedObjects += [dropped]
+#        vp.Object.LinkedObjects = list(set(vp.Object.LinkedObjects)) #remove duplicates
+#
+#    def canDropObjects(self):
+#        return True
+#
+#    def canDropObject(self, dropped):
+#        return hasattr(dropped, "ViewObject")
+#
+#    def attach(self,vobj):
+#        self.Object = vobj.Object
+#        self.standard = coin.SoGroup()
+#        vobj.addDisplayMode(self.standard,"Standard")
+#
+#    def onDelete(self, vobj, subelements):
+#        vobj.Object.Enabled = False
+#        vobj.Object.Document.recompute()
+#        return True
+#
+#    def updateData(self, fp, prop):
+#        '''If a property of the handled feature has changed we have the chance to handle this here'''
+#        if prop == "Environment":
+#            fp.ViewObject.signalChangeIcon()
+#
+#    def getDisplayModes(self,obj):
+#        '''Return a list of display modes.'''
+#        modes=["Standard"]
+#        return modes
+#
+#    def claimChildren(self):
+#        return[]
+#
+#    def getDefaultDisplayMode(self):
+#        '''Return the name of the default display mode. It must be defined in getDisplayModes.'''
+#        return "Standard"
+#
+#    def setDisplayMode(self,mode):
+#        '''Map the display mode defined in attach with those defined in getDisplayModes.\
+#                Since they have the same names nothing needs to be done. This method is optional'''
+#        return mode
+#
+#    def onChanged(self, vp, prop):
+#        '''Here we can do something when a single property got changed'''
+#        #FreeCAD.Console.PrintMessage("Change property: " + str(prop) + "\n")
+#        pass
+#
+#    def getIcon(self):
+#        '''Return the icon in XPM format which will appear in the tree view. This method is\
+#                optional and if not defined a default icon is shown.'''
+#        iconTextured = """
+#/* XPM */
+#static char *_693848802616[] = {
+#/* columns rows colors chars-per-pixel */
+#"64 64 116 2 ",
+#"   c #0B650BB10DE1",
+#".  c #0DBE0E0B1115",
+#"X  c #10200F3813BC",
+#"o  c #0F1110011307",
+#"O  c #119B125615DD",
+#"+  c #143415321A30",
+#"@  c #16DB18631CF3",
+#"#  c #18E719ED1E46",
+#"$  c #141816BF200E",
+#"%  c #1650190121ED",
+#"&  c #1AD71C552268",
+#"*  c #1C2C1EEC286B",
+#"=  c #1EAA209824F5",
+#"-  c #1E3E212C2A47",
+#";  c #211C226F2652",
+#":  c #22FA25302AC4",
+#">  c #266E28E82D80",
+#",  c #29202AC92E23",
+#"<  c #238A27013143",
+#"1  c #25EA2A833376",
+#"2  c #2AFC2D5832DB",
+#"3  c #28FE2DD8392C",
+#"4  c #2DBA30FC35C9",
+#"5  c #2C2C318A3BD9",
+#"6  c #319D332E3610",
+#"7  c #329E35AD3AA8",
+#"8  c #360F39893E28",
+#"9  c #3A4A3B303DFF",
+#"0  c #2E87359C4292",
+#"q  c #305236804275",
+#"w  c #329D3954441F",
+#"e  c #39C83D7542B6",
+#"r  c #359C3D0149AC",
+#"t  c #383A3F404BC4",
+#"y  c #3D5840CE4552",
+#"u  c #3B94420A4CCF",
+#"i  c #3DFE44B85143",
+#"p  c #4394443145FD",
+#"a  c #41C5455C4A4D",
+#"s  c #457D49764E74",
+#"d  c #4A8E4B894DEA",
+#"f  c #409047185373",
+#"g  c #45364AC95396",
+#"h  c #49CF4E13539E",
+#"j  c #46634D2C5AFF",
+#"k  c #498B4E115CE4",
+#"l  c #4C5050EC55EC",
+#"z  c #4E1B53A75A3E",
+#"x  c #532953EE55DA",
+#"c  c #516955E75A8F",
+#"v  c #54EF592D5DCD",
+#"b  c #5CE15CE85DE7",
+#"n  c #4CE5541362C2",
+#"m  c #516355E36259",
+#"M  c #55735AE06229",
+#"N  c #59DB5E276391",
+#"B  c #55875C586A13",
+#"V  c #5BDF60CA6600",
+#"C  c #5D41629A6980",
+#"Z  c #5DA6646471AD",
+#"A  c #6278629763D6",
+#"S  c #622F66926C3A",
+#"D  c #63C169026E62",
+#"F  c #6A646B386CE6",
+#"G  c #61E0672E71F2",
+#"H  c #64C56B4C7396",
+#"J  c #69F66E6A73DA",
+#"K  c #67006DBD7A69",
+#"L  c #68376F227AA8",
+#"P  c #6C7471817689",
+#"I  c #6DFD73857A79",
+#"U  c #72EA7485765A",
+#"Y  c #71EF76AD7BFA",
+#"T  c #7435794E7EAC",
+#"R  c #7B1A7D027F95",
+#"E  c #6C5473C880B9",
+#"W  c #714177B881DE",
+#"Q  c #76367B8C81CE",
+#"!  c #797A7E8E844E",
+#"~  c #76607DA5882D",
+#"^  c #7BCE814A8691",
+#"/  c #7E2284438A18",
+#"(  c #7FA0880B8BE5",
+#")  c #8345841C85C8",
+#"_  c #821B86C08BA5",
+#"`  c #847189E68E50",
+#"'  c #8AFC8C168D68",
+#"]  c #85338C479212",
+#"[  c #89068ED4935A",
+#"{  c #87859080937B",
+#"}  c #8A45922294B2",
+#"|  c #8EC095939BCA",
+#" . c #91BB928693B4",
+#".. c #97DD99EA9BD1",
+#"X. c #9B909CBB9E2E",
+#"o. c #A441A473A55A",
+#"O. c #A4D9A778A8FB",
+#"+. c #AC79AD21AE40",
+#"@. c #B33EB400B547",
+#"#. c #B67CB78AB89C",
+#"$. c #B6ECB898BA4A",
+#"%. c #BC61BCF0BDC0",
+#"&. c #C02CC15AC322",
+#"*. c #C274C424C54E",
+#"=. c #C83FC83FC855",
+#"-. c #CC1ACC3CCC9E",
+#";. c #D017D0B5D270",
+#":. c #D43CD482D4F3",
+#">. c #DBAEDBDEDC46",
+#",. c #E02EE054E096",
+#"<. c #E444E465E4B3",
+#"1. c #EBF8EC3AEC69",
+#"2. c #F02DF0F6F11C",
+#"3. c #F5E1F5F3F61B",
+#"4. c #F840F862F891",
+#"5. c none",
+#/* pixels */
+#"5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.",
+#"5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.",
+#"5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.",
+#"5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.4.4.5.4.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.",
+#"5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.4.<.%. .` ) ) ) o.=.2.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.",
+#"5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.4.;.` c a g c v l a 9 7 6 8 F =.4.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.",
+#"5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.4.&.S 7 7 w r u l c z h 9 2 > ; # , U :.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.",
+#"5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.:.F 6 3 3 0 0 0 e f l c z h e 2 , ; @ # 6 @.4.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.",
+#"5.5.5.5.5.5.5.5.5.5.5.5.5.5.3...e - < 3 0 0 0 0 w r f h x c h e 2 , & + o > X.4.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.",
+#"5.5.5.5.5.5.5.5.5.5.5.5.5.>.F 2 % * * 1 3 3 0 0 w w r t j z c h e 2 , = O o ; ' 4.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.",
+#"5.5.5.5.5.5.5.5.5.5.5.5.-.x : & * * * < < 3 0 0 w w w r u h c c h e 2 > = O . & U 3.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.",
+#"5.5.5.5.5.5.5.5.5.5.5.%.d & % * * % * * - < 3 0 0 w r r r t h k z h e 4 , & O . # A 1.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.",
+#"5.5.5.5.5.5.5.5.5.4.%.p & + $ % * * * % * * < 3 0 0 0 r r r t g z c h y 2 > & O . + x <.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.",
+#"5.5.5.5.5.5.5.5.5.;.s % O + + + $ % % * % * * - 3 0 0 r r t t t f l c h y 4 > = O   O d :.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.",
+#"5.5.5.5.5.5.5.5.>.v & + O X + O $ $ % * * $ * * < 1 0 0 r t t t u u l c g e 4 - # O   X p -.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.",
+#"5.5.5.5.5.5.5.2.U , * $ $ + X O + + $ $ $ * % % * * < 0 q r t t u u i l c h y 4 , # X     9 #.4.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.",
+#"5.5.5.5.5.5.4.X.7 8 2 = % @ O o O + + $ $ $ % % % * * 3 0 0 t t i t u i l z l e 6 1 # X     6 o.4.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.",
+#"5.5.5.5.5.5.-.a e y y 5 - = = @ + O O O + $ % % $ % % * - 0 q t u u u r i l c l e 2 > # X     ,  .4.5.5.5.5.5.5.5.5.5.5.5.5.5.5.",
+#"5.5.5.5.5.3.F > 7 e 8 8 7 1 - = = $ + + X $ $ % % $ $ % * < 3 q r i i i u i g c h e 4 > @ X     : ) 3.5.5.5.5.5.5.5.5.5.5.5.5.5.",
+#"5.5.5.5.5.#.7 : : > , , 3 4 4 - - = = % $ O $ $ $ % $ $ % * < 3 0 r i i i u i g v l e 6 > @ o     & U 3.5.5.5.5.5.5.5.5.5.5.5.5.",
+#"5.5.5.5.1.V , : = & # # # = > > : : : : * $ + O + $ $ $ $ $ % < 3 0 r i f f u i g c l e , & o o .   @ F <.5.5.5.5.5.5.5.5.5.5.5.",
+#"5.5.5.5.#.6 4 , = # @ O O O + = - : - : : : & $ + + + $ $ $ $ % < 3 0 u f f f i g h 8 > = , 6 7 6 ; @ # b >.5.5.5.5.5.5.5.5.5.5.",
+#"5.5.5.4.F 4 4 4 : = & @ + O o O + % & - : > , : % + X $ $ $ $ $ & - 3 0 t j g e 7 > : 2 s D P P U A g 7 : b ;.5.5.5.5.5.5.5.5.5.",
+#"5.5.5.,.a 7 7 4 , : = & # @ @ O X X + + & - , 2 > * $ + $ $ + $ $ $ - 3 g w 1 : : > w j Z T ^ Q ! T J N p , b -.5.5.5.5.5.5.5.5.",
+#"5.5.4.O.6 7 8 8 4 , ; = # & # @ + O X X + + & > 2 2 : # + $ $ $ + $ 5 j 7 & & : w z C H I Y I I Y T W Y H c 7 v -.5.5.5.5.5.5.5.",
+#"5.5.3.A , 6 7 6 7 4 > ; = & & # # @ + X o . O + & 2 2 > & + + $ % g D y & , 8 h M L I T T Q T T W Q Q ! Q J c 4 x <.5.5.5.5.5.5.",
+#"5.5.1.7 > 4 6 4 , , > = = % = % # # @ + O O . X + # : 2 2 = $ * B ~ h , 4 u z C H I T Q Q Q Q Q ! Q ! Q Q U S h 2  .4.5.5.5.5.5.",
+#"5.5.:., ; 2 4 , = = = = = # = = & & # # + + O X X X @ = > 2 2 S _ l 1 8 h m C Z P D v d s a d v F T Q Q W I S v h e :.5.5.5.5.5.",
+#"5.4.@.> # , 6 , = # # = # = = # & & # & # # + + X X . + + 3 U ] h 4 y h v C Z v y 6 , = @ + @ ; 6 h J R T P S c v e _ 4.5.5.5.5.",
+#"5.4. .; = ; , 6 = # # # # @ # = & & & & & # # # + + + X # S ` g 4 u l v V z y > @ O O O O O o . X # 9 J T P S c v v l 3.5.5.5.5.",
+#"5.4.) + + = ; , - # # # @ # % % & # & # % & # & + + + + h [ g 2 u z v V u , @ o O @ @ O + O O o . o O p Y T D v c N d ,.5.5.5.5.",
+#"5.4.' ; . # = ; , # @ @ @ @ # # # & & & & # & # % # # e [ N 6 g z V v e & O + O @ O + + + O O O o . . # v ! P N v v v +.4.5.5.5.",
+#"5.4.} y # o # # ; # @ # + @ # # # % # & & & & & % @ > ( P 7 i z v c 8 & + + + + + + + + + + + O O X X X 8 Y T A v M C  .5.5.5.5.",
+#"5.4.X.y 6 @ O # # = # @ @ @ @ @ # # # % # # & # # = V ( 8 u v V C h = % + + + + + + X + + X + O + O X . & P ^ J v N D X.4.5.5.5.",
+#"5.4.%.6 9 6 @ o # = # # @ @ @ @ # @ @ % # & & & = 7 ( l y c V V z N y - & # + + + + + + + + + O + O X X + D ] I V V D O.4.5.5.5.",
+#"5.5.,., ; 8 4 @ # # # # @ O + @ @ @ @ # # # # & - P Y 8 z V C u 7 C J d > % $ + + + + + + + + O O O O O + V ] Q C V D X.4.5.5.5.",
+#"5.5.3.x O ; 6 6 # @ # @ @ O @ + @ + @ @ @ @ @ # y { u l C D v 3 < p P Y k , & % $ + + + + + + + + O O O # b } ! D C D X.5.5.5.5.",
+#"5.5.4. .O o # 6 6 = # # @ O + + O @ @ O @ @ @ = J C u V C H V i < , h Y Q c 2 & & $ + + + X + + + + O + O b | ^ H C J @.4.5.5.5.",
+#"5.5.5.:.6   . @ , 6 ; # @ @ O @ O + O @ @ + @ 6 ` u V D J L W Z f 0 5 N Q ! m 2 & & # + + + + + + + O + # F ..^ J D J ;.5.5.5.5.",
+#"5.5.5.4.' O   o O ; 6 ; # O @ @ @ @ O O + + # V R l D P L ^ ( / Z j q e G ! ! N 4 & & # + + + + + + + O # ) [ ^ Y J J 1.5.5.5.5.",
+#"5.5.5.5.<.p     . . ; , > @ @ O + O O O O O > ( C C P Y C T ( { / E k r h P ~ Q N 2 & & # + + + + + @ O 5 [ _ ~ Q Y ) 3.5.5.5.5.",
+#"5.5.5.5.5.@.6       . # , ; @ O + + + O @ @ e | V P Y Y i V W ( [ ] E n i B T ^ ^ N 6 & & # # + + @ O @ M ! / / ! T +.4.5.5.5.5.",
+#"5.5.5.5.5.5.+.6     . . @ , ; @ O + + + O @ v ( J Y R S w u B I ] [ ] ~ B k G Q _ ! N 5 & * & + + + + : ^ D _ / / ! >.5.5.5.5.5.",
+#"5.5.5.5.5.5.4.+.9     . o @ , > @ O + O O = Y Y T T R N g 0 u n E _ [ ] ~ Z B L ! ! ! C 4 & & & @ + @ h _ N _ _ _ ` 3.5.5.5.5.5.",
+#"5.5.5.5.5.5.5.4.&.p .   o o O , > # O O O ; ( Y R ^ ^ z c s q r k E / [ } / K Z Y ! _ ! S 5 & & # # 2 / v U _ _ _ $.4.5.5.5.5.5.",
+#"5.5.5.5.5.5.5.5.4.-.d .   o o o > 2 & O @ 2 ( ! R ^ R 8 p z h 7 0 j H / [ } ( L H Q ~ ! ! A 2 & # : S Y g _ _ ` ` 1.5.5.5.5.5.5.",
+#"5.5.5.5.5.5.5.5.5.5.>.x o   o o O : 2 & @ 8 } ( / / T : > e c d 0 q g G ^ { } ] E K Q ! ! ! N 5 ; h _ p L ` ` _ @.5.5.5.5.5.5.5.",
+#"5.5.5.5.5.5.5.5.5.4.4.<.A @   o o o ; 4 & y } ( / _ Y : o = 8 x j q 3 f Z W ] } ] W E Q ! / ! N h / z c _ ] _ ` 1.5.5.5.5.5.5.5.",
+#"5.5.5.5.5.5.5.5.5.5.5.5.3.F &   . o o ; , p } ( ( _ T , . X = 6 l l w 5 i B W _ } { ~ W Q ^ ^ ^ ` N y ! ` ` ` *.5.5.5.5.5.5.5.5.",
+#"5.5.5.5.5.5.5.5.5.5.5.5.5.3.R ;     o o # p } _ _ _ ! 4 . . . # 4 d z e 5 u m I ( } { ^ W ~ ( ( C 8 P ` ` ` O.4.5.5.5.5.5.5.5.5.",
+#"5.5.5.5.5.5.5.5.5.5.5.5.5.5.4. .,   . o + 6 { _ _ _ ) e .   . . O 2 a c e 3 r n L ( } } / ~ ^ V 7 J ` ` _ } 1.5.5.5.5.5.5.5.5.5.",
+#"5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.o.,   o O , ) _ _ _ _ N @       o O > y c u 4 w k G ^ _ ^ P d 7 S ` ` ` [ ;.5.5.5.5.5.5.5.5.5.5.",
+#"5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.#.6   o # T _ ( _ ` Q e .     . o O ; 9 c a 5 0 g m h e , 8 J _ ` ` [ *.5.5.5.5.5.5.5.5.5.5.5.",
+#"5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.4.=.9 O @ v _ _ _ ` ( D 3 +     . o o & 8 l a 1 1 & # , a T ` ` ` ] %.4.5.5.5.5.5.5.5.5.5.5.5.",
+#"5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.:.p + 6 ) _ _ ] _ _ S e : @ + O O O = 6 8 2 # : w v ( ` ` _ ' @.4.5.5.5.5.5.5.5.5.5.5.5.5.",
+#"5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.,.x : S _ ] _ ] _ _ K m d p p 7 8 8 e a u y c ! ` ` ' _ ' *.4.5.5.5.5.5.5.5.5.5.5.5.5.5.",
+#"5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.1.F e W _ ` ` ` _ _ ^ P P ^ ` ` ^ Y D D ! ` ] ` ` ` } :.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.",
+#"5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.1.R v Q _ ` ] ] ` ] ` ` ) ^ ^ ( ( ' ` ` ` ' ` ' ..<.4.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.",
+#"5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.3. .A Q _ _ ] ` ` ` ` ` { { ` ` ` ' ` _ ` [ &.4.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.",
+#"5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.4.o.N Y ! _ ` ` ` ` { ` { ` ` ` ` ` ` @.1.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.",
+#"5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.4.>._ S Y ^ ) ` ) _ _ ` ' _ / [ @.1.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.",
+#"5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.4.<.+.` U U P Y R ) X.@.>.3.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.",
+#"5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.4.4.4.3.1.1.4.4.4.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.",
+#"5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5.5."
+#};"""
+#
+#        if self.Object.Environment != "none" and self.Object.Enabled:
+#            return iconTextured
+#        else:
+#            return None #default app::featurepython icon
+#
+#    def __getstate__(self):
+#        '''When saving the document this object gets stored using Python's json module.\
+#                Since we have some un-serializable parts here -- the Coin stuff -- we must define this method\
+#                to return a tuple of all serializable objects or None.'''
+#        return None
+#
+#    def __setstate__(self,state):
+#        '''When restoring the serialized object from document we have the chance to set some internals here.\
+#                Since no data were serialized nothing needs to be done here.'''
+#        return None
+#
 #CODE_ENDS_HERE
 ########################################
 
@@ -145,6 +411,7 @@ def makeObject(FP):
 
     fp = doc.addObject("App::FeaturePython","EasyReflector")
     FP.EasyReflector(fp)
+    FP.EasyReflectorVP(fp.ViewObject)
 
     if len(sel) >= 1:
         fp.LinkedObjects = sel
