@@ -15,13 +15,13 @@ Put the EasyReflector.FCMacro file into your macros folder.  It will create the 
 
 ## Usage
 
-Select the object you wish to apply the texture to, and then run the EasyReflector.FCMacro macro.  (Do not run the EasyReflector.py file as it is imported by the .FCMacro file and by FreeCAD when you load a document containing one of the EasyReflector objects.)
+Select the object you wish to apply the texture to, and then run the EasyReflector.FCMacro macro.  (Do not run the easyreflector.py file as it is imported by the .FCMacro file and by FreeCAD when you load a document containing one of the EasyReflector objects.)
 
-The studio texture is applied to the selected object(s) by default, but you can change that by editing the Environment property of the EasyReflector object.  You can also drag and drop objects onto the EasyReflector icon in the combo view to add this to the LinkedObjects property.
+The studio texture is applied to the selected object(s) by default, but you can change that by editing the Environment property of the EasyReflector object.  You can also drag and drop objects onto the EasyReflector icon in the combo view to add them to the LinkedObjects property.
 
-You can also use your own image file for the texture instead of the files provided here.  To do this, choose the "image file" option for the Environment.  This makes visible the "Image File" property, which you can use to select your image file to apply.  The file can reside in any directory.
+You can use your own image file for the texture instead of the files provided here.  To do this, choose the "other image file" option for the Environment.  This makes visible the "Image File" property, which you can use to select your image file to apply.  The file can reside in any directory.
 
-You can also put your own JPG files into the easy_reflections folder and when you create a new EasyReflector object those files will appear in the Environment property as an option.  (Only works for files with JPG extension.  For other extension, select "other image file" and then point the ImageFile property to that file.)
+You can also put your own image files into the easy_reflections folder and when you create a new EasyReflector object those files will appear in the Environment property as an option.  As of version 0.2023.09.04d more image file formats are supported in addition to JPG.
 
 If you delete the EasyReflector objects, it will remove texturing from all of the LinkedObjects.
 
