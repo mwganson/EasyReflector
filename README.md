@@ -21,7 +21,7 @@ The studio texture is applied to the selected object(s) by default, but you can 
 
 You can also use your own image file for the texture instead of the files provided here.  To do this, choose the "image file" option for the Environment.  This makes visible the "Image File" property, which you can use to select your image file to apply.  The file can reside in any directory.
 
-You can also put your own JPG files into the easy_reflections folder and when you create a new EasyReflector object those files will appear in the Environment property as an option.  (Only works for files with JPG extension.  For other extension, select "image file" and then point the ImageFile property to that file.)
+You can also put your own JPG files into the easy_reflections folder and when you create a new EasyReflector object those files will appear in the Environment property as an option.  (Only works for files with JPG extension.  For other extension, select "other image file" and then point the ImageFile property to that file.)
 
 If you delete the EasyReflector objects, it will remove texturing from all of the LinkedObjects.
 
@@ -39,6 +39,10 @@ Note: Removing a textured object from the LinkedObjects list does not automatica
 version of the macro used to create this EasyReflector object
 
 ## ChangeLog
+### 0.2023.09.04d
+Now can use any image file in the easy_reflections folder, not just .jpg files
+Try to improve download speed using concurrent downloading
+Display wait cursor during file download
 ### 0.2023.09.04b -- added view provider and icons
 Now can accept drag and drop
 Untextures its LinkedObjects upon deletion
