@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-__version__ = "0.2023.09.04c"
-#__version__ = "0.2023.09.04c"
+__version__ = "0.2023.09.04d"
+#__version__ = "0.2023.09.04d"
 ##EasyReflector macro by TheMarkster
 ##based on work by Athanaze at https://github.com/Athanaze/Freecad-easy-reflections
 ##
@@ -8,29 +8,30 @@ __version__ = "0.2023.09.04c"
 ##
 #from pivy import coin
 #import FreeCAD, FreeCADGui
-#import os, requests
-#from PySide import QtGui
+#import os, requests, concurrent.futures
+#from PySide import QtGui, QtCore
 #
 #PATH = FreeCAD.ParamGet("User parameter:BaseApp/Preferences/Macro").GetString("MacroPath")+"/easy_reflections/"
-#DEFAULT_FILES = ["image file","none","interior","industrial","mesh2","outside","studio","workshop"]
+#DEFAULT_FILES = ["other image file","none","interior.jpg","industrial.jpg","mesh2.jpg","outside.jpg","studio.jpg","workshop.jpg"]
 #GITHUB_BASE_URL = "https://github.com/mwganson/EasyReflector/raw/main/easy_reflections/"
 #EXPANDED_FILES = DEFAULT_FILES #will add any additional files user has added to Environment property
 #
-## Get a list of all .jpg files in the local directory
-#local_files = [f for f in os.listdir(PATH) if f.endswith(".jpg")] if os.path.exists(PATH) else DEFAULT_FILES
+## Get a list of all image files in the local directory
+#local_files = [f for f in os.listdir(PATH)] if os.path.exists(PATH) else DEFAULT_FILES
 #
 ## Iterate through local files and add their base names to EXPANDED_FILES if not already present
 #for local_file in local_files:
-#    base_name = os.path.splitext(local_file)[0]  # Get the base name without the .jpg extension
-#    if base_name not in EXPANDED_FILES and base_name != "white":
-#        EXPANDED_FILES.append(base_name)
+#    base_name, extension = os.path.splitext(local_file)
+#    fullname = base_name + extension
+#    if fullname not in EXPANDED_FILES and fullname != "white.jpg": #aliased to "none"
+#        EXPANDED_FILES.append(fullname)
 #
 #class EasyReflector:
 #    def __init__(self, obj):
 #        obj.addProperty("App::PropertyString","Version","EasyReflector","Version used to create this object").Version = __version__
 #        obj.addProperty("App::PropertyEnumeration", "Environment","EasyReflector","Select Environment (white = None)")
 #        obj.Environment = EXPANDED_FILES
-#        obj.Environment = "studio"
+#        obj.Environment = "studio.jpg"
 #        obj.addProperty("App::PropertyLinkList","LinkedObjects","EasyReflector","Objects to apply textures to")
 #        obj.addProperty("App::PropertyFile","ImageFile","EasyReflector","Image file to use for environment")
 #        obj.setEditorMode("ImageFile", 2) #hide by default
@@ -46,7 +47,7 @@ __version__ = "0.2023.09.04c"
 #        if not fp:
 #            return
 #        elif prop == "Environment":
-#            if fp.Environment == "image file":
+#            if fp.Environment == "other image file":
 #                fp.setEditorMode("ImageFile", 0) #normal mode
 #            else:
 #                fp.setEditorMode("ImageFile", 2) #hide
@@ -55,7 +56,7 @@ __version__ = "0.2023.09.04c"
 #        self.setEnvironment(fp, fp.Environment)
 #
 #    def checkImagesExist(self, fp):
-#        paths = [PATH + (fn + ".jpg"  if fn != "none" else "white.jpg") for fn in DEFAULT_FILES[1:]]
+#        paths = [PATH + (fn if fn != "none" else "white.jpg") for fn in DEFAULT_FILES[1:]]
 #        for path in paths:
 #            if not os.path.exists(path):
 #                return False
@@ -77,47 +78,53 @@ __version__ = "0.2023.09.04c"
 #        ret = msgBox.exec();
 #        return ret == QtGui.QMessageBox.Yes
 #
+#
 #    def downloadImages(self, fp):
 #        if not self.getPermissionFromUser(fp):
 #            return
 #        FreeCAD.Console.PrintMessage("Downloading files...\n")
 #        os.makedirs(PATH, exist_ok=True)
-#        for fn in DEFAULT_FILES[1:]:
+#        QtGui.QApplication.setOverrideCursor(QtCore.Qt.WaitCursor)
+#
+#        def download_file(fn):
 #            if fn == "none":
 #                # For "none", download the white.jpg file
 #                url = GITHUB_BASE_URL + "white.jpg"
 #            else:
 #                # For other files, download them using their respective names
-#                url = GITHUB_BASE_URL + fn + ".jpg"
+#                url = GITHUB_BASE_URL + fn
 #
-#            # Get the content from the GitHub URL
-#            response = requests.get(url)
-#   
-#            # Check if the request was successful
-#            if response.status_code == 200:
+#            try:
+#                response = requests.get(url)
+#                response.raise_for_status()
+#                content = response.content
+#
 #                # Construct the local file path
-#                local_file_path = os.path.join(PATH, fn + ".jpg" if fn != "none" else "white.jpg")
-#        
+#                local_file_path = os.path.join(PATH, fn if fn != "none" else "white.jpg")
+#
 #                # Save the content to the local file
 #                with open(local_file_path, "wb") as file:
-#                    file.write(response.content)
-#            
-#                print(f"Downloaded '{fn}.jpg' from GitHub and saved it as '{local_file_path}'")
-#            else:
-#                print(f"Failed to download '{fn}.jpg' from GitHub. Status code: {response.status_code}")
+#                    file.write(content)
 #
+#                print(f"Downloaded '{fn}' from GitHub and saved it as '{local_file_path}'")
+#            except Exception as e:
+#                print(f"Failed to download '{fn}' from GitHub: {str(e)}")
+#
+#        with concurrent.futures.ThreadPoolExecutor() as executor:
+#            executor.map(download_file, DEFAULT_FILES[1:])
+#        QtGui.QApplication.restoreOverrideCursor()
 #        
 #    def setEnvironment(self, fp, env):
 #        if not self.checkImagesExist(fp):
 #            self.downloadImages(fp)
 #        tex = coin.SoTexture2()
-#        if env == "image file":
+#        if env == "other image file":
 #            tex.filename = fp.ImageFile
 #        else:
 #            if fp.Environment == "none":
 #                tex.filename = PATH + "white.jpg"
 #            else:
-#                tex.filename = PATH + fp.Environment + ".jpg"
+#                tex.filename = PATH + fp.Environment
 #        if not fp.Enabled:
 #            tex.filename = PATH + "white.jpg"
 #        tc = coin.SoTextureCoordinateEnvironment()
