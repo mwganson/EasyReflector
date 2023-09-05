@@ -39,6 +39,8 @@ Note: Removing a textured object from the LinkedObjects list does not automatica
 version of the macro used to create this EasyReflector object
 
 ## ChangeLog
+### 0.2023.09.04e
+Avoid some warning messages when creating message boxes during installation and file downloads.
 ### 0.2023.09.04d
 Now can use any image file in the easy_reflections folder, not just .jpg files
 Try to improve download speed using concurrent downloading
