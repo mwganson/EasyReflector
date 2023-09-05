@@ -39,6 +39,10 @@ Note: Removing a textured object from the LinkedObjects list does not automatica
 version of the macro used to create this EasyReflector object
 
 ## ChangeLog
+### 0.2023.09.05
+Toolbar icon fixed when installing from addon manager (hopefully)
+Tried to use XPM text the first time, but evidently the exact format was wrong, so
+I switched to using __icon__ = url_to_toolbar_icon_file.svg
 ### 0.2023.09.04f
 Attempt to fix issue with toolbar icon when installing from addon manager
 ### 0.2023.09.04e
