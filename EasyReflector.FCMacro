@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-__version__ = "0.2023.09.04g"
-__icon__ = "https://wiki.freecad.org/images/9/91/EasyReflectorIcon.svg"
-#__version__ = "0.2023.09.04g"
+__version__ = "0.2023.09.05"
+__icon__ = "https://github.com/mwganson/EasyReflector/raw/main/EasyReflectorIcon.svg"
+#__version__ = "0.2023.09.05"
 ##EasyReflector macro by TheMarkster
 ##based on work by Athanaze at https://github.com/Athanaze/Freecad-easy-reflections
 ##
