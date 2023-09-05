@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-__version__ = "0.2023.09.04d"
-#__version__ = "0.2023.09.04d"
+__version__ = "0.2023.09.04e"
+#__version__ = "0.2023.09.04e"
 ##EasyReflector macro by TheMarkster
 ##based on work by Athanaze at https://github.com/Athanaze/Freecad-easy-reflections
 ##
@@ -461,7 +461,8 @@ if __name__ == "__main__":
         mb = QtGui.QMessageBox()
         mb.setWindowTitle(BASENAME+" setup")
         mb.setIcon(mb.Information)
-        mb.setStandardButtons(mb.Ok | mb.Cancel)
+        mb.setStandardButtons(mb.Ok)
+        mb.addButton(mb.Cancel)
         mb.setDefaultButton(mb.Cancel)
         okBtn = mb.button(QtGui.QMessageBox.StandardButton.Ok)
         cancelBtn = mb.button(QtGui.QMessageBox.StandardButton.Cancel)
@@ -517,7 +518,8 @@ This makes it available to the system upon restarting FreeCAD and loading docume
             mbox.setText(BASENAME+".py has been updated to version "+__version__+". \
 You must restart FreeCAD for the new changes to take effect and to use the macro.")
             mbox.setIcon(mbox.Warning)
-            mbox.setStandardButtons(mbox.Ok | mbox.Cancel)
+            mbox.setStandardButtons(mbox.Ok)
+            mbox.addButton(QtGui.QMessageBox.Cancel)
             mbox.setDefaultButton(mbox.Cancel)
             okBtn = mbox.button(QtGui.QMessageBox.StandardButton.Ok)
             cancelBtn = mbox.button(QtGui.QMessageBox.StandardButton.Cancel)
@@ -528,5 +530,3 @@ You must restart FreeCAD for the new changes to take effect and to use the macro
                 QtCore.QTimer.singleShot(1000, utils.restart_freecad)
         else:
             makeObject(FP)
-
-
