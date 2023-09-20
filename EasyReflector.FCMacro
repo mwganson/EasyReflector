@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-__version__ = "0.2023.09.05"
+__version__ = "0.2023.09.20"
 __icon__ = "https://github.com/mwganson/EasyReflector/raw/main/EasyReflectorIcon.svg"
-#__version__ = "0.2023.09.05"
+#__version__ = "0.2023.09.20"
 ##EasyReflector macro by TheMarkster
 ##based on work by Athanaze at https://github.com/Athanaze/Freecad-easy-reflections
 ##
@@ -53,6 +53,18 @@ __icon__ = "https://github.com/mwganson/EasyReflector/raw/main/EasyReflectorIcon
 #                fp.setEditorMode("ImageFile", 0) #normal mode
 #            else:
 #                fp.setEditorMode("ImageFile", 2) #hide
+#        elif prop == "LinkedObjects":
+#            self.verifyLinkedObjects(fp)
+#
+#    def verifyLinkedObjects(self,fp):
+#        links = fp.LinkedObjects
+#        incompatibles = ["Mesh::Feature","App::Plane","App::Line"]
+#        links_to_keep = [obj for obj in links if not obj.TypeId in incompatibles]
+#        links_removed = [obj for obj in links if obj.TypeId in incompatibles]
+#        for lr in links_removed:
+#            FreeCAD.Console.PrintWarning(f"EasyReflector: {lr.Label} is incompatible \
+#and has been removed from Linked Objects property.\n")
+#        fp.LinkedObjects = links_to_keep
 #
 #    def onDocumentRestored(self, fp):
 #        self.setEnvironment(fp, fp.Environment)
@@ -74,7 +86,7 @@ __icon__ = "https://github.com/mwganson/EasyReflector/raw/main/EasyReflectorIcon
 #        info += "your macros folder in a subfolder named easy_reflections. "
 #        info += "You must manually remove these files if you uninstall EasyReflector. "
 #        info += "Proceed with download (Yes/No)?"
-#        msgBox.setInformativeText(info) 
+#        msgBox.setInformativeText(info)
 #        msgBox.setStandardButtons(QtGui.QMessageBox.Yes | QtGui.QMessageBox.No)
 #        msgBox.setDefaultButton(QtGui.QMessageBox.No)
 #        ret = msgBox.exec();
@@ -115,7 +127,7 @@ __icon__ = "https://github.com/mwganson/EasyReflector/raw/main/EasyReflectorIcon
 #        with concurrent.futures.ThreadPoolExecutor() as executor:
 #            executor.map(download_file, DEFAULT_FILES[1:])
 #        QtGui.QApplication.restoreOverrideCursor()
-#        
+#
 #    def setEnvironment(self, fp, env):
 #        if not self.checkImagesExist(fp):
 #            self.downloadImages(fp)
@@ -142,7 +154,7 @@ __icon__ = "https://github.com/mwganson/EasyReflector/raw/main/EasyReflectorIcon
 #                rootnode.replaceChild(1, tex)
 #                rootnode.replaceChild(2, tc)
 #            else:
-#                rootnode.insertChild(tex,1) 
+#                rootnode.insertChild(tex,1)
 #                rootnode.insertChild(tc,2)
 #
 #__XPM__ = """
@@ -424,6 +436,10 @@ def makeObject(FP):
 
     if len(sel) >= 1:
         fp.LinkedObjects = sel
+    else:
+        FreeCAD.Console.PrintWarning("EasyReflector: nothing selected.  Select an \
+object prior to running the macro or drag/drop your object(s) on to it in the \
+combo view or edit the Linked Objects property.\n")
 
 
 #################
