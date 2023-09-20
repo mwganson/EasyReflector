@@ -39,6 +39,9 @@ Note: Removing a textured object from the LinkedObjects list does not automatica
 version of the macro used to create this EasyReflector object
 
 ## ChangeLog
+### 0.2023.09.20
+Check for incompatible types in LinkObjects property
+Warn if no object was selected during object creation
 ### 0.2023.09.05
 Toolbar icon fixed when installing from addon manager (hopefully)
 Tried to use XPM text the first time, but evidently the exact format was wrong, so
