@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-__version__ = "0.2023.09.20"
+__version__ = "0.2023.11.07"
 __icon__ = "https://github.com/mwganson/EasyReflector/raw/main/EasyReflectorIcon.svg"
-#__version__ = "0.2023.09.20"
+#__version__ = "0.2023.11.07"
 ##EasyReflector macro by TheMarkster
 ##based on work by Athanaze at https://github.com/Athanaze/Freecad-easy-reflections
 ##
@@ -35,7 +35,7 @@ __icon__ = "https://github.com/mwganson/EasyReflector/raw/main/EasyReflectorIcon
 #        obj.Environment = EXPANDED_FILES
 #        obj.Environment = "studio.jpg"
 #        obj.addProperty("App::PropertyLinkList","LinkedObjects","EasyReflector","Objects to apply textures to")
-#        obj.addProperty("App::PropertyFile","ImageFile","EasyReflector","Image file to use for environment")
+#        obj.addProperty("App::PropertyFileIncluded","ImageFile","EasyReflector","Image file to use for environment")
 #        obj.setEditorMode("ImageFile", 2) #hide by default
 #        obj.addProperty("App::PropertyBool","Enabled","EasyReflector","Whether texturing is enabled or not").Enabled=True
 #        obj.Proxy = self
