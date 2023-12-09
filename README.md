@@ -39,6 +39,8 @@ Note: Removing a textured object from the LinkedObjects list does not automatica
 version of the macro used to create this EasyReflector object
 
 ## ChangeLog
+### 0.2023.12.09
+Support mesh objects
 ### 0.2023.12.08
 Fix issue with name of easyreflector.py (sometimes it's EasyReflector.py)
 ### 0.2023.11.07
