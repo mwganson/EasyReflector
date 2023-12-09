@@ -39,6 +39,8 @@ Note: Removing a textured object from the LinkedObjects list does not automatica
 version of the macro used to create this EasyReflector object
 
 ## ChangeLog
+### 0.2023.12.08
+Fix issue with name of easyreflector.py (sometimes it's EasyReflector.py)
 ### 0.2023.11.07
 Changed ImageFile property from App::PropertyFile to App::PropertyFileIncluded.  This way when the user uses "other image file" option in the Environment enumeration the image file will be saved with and embedded into the FreeCAD .FCStd file.  Then if the file is shared the other user will have access to the image file for the texture being used.
 ### 0.2023.09.20
